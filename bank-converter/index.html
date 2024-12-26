@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Bank</title>
+    <!-- Link ke Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Styling untuk Card */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 300px; /* Pastikan card memiliki tinggi tetap */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Flexbox untuk logo di tengah */
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%; /* Mengisi seluruh tinggi card */
+            text-align: center;
+        }
+
+        /* Menetapkan ukuran tetap untuk logo (lebih besar) */
+        .card img {
+            width: 200px; /* Ukuran logo yang lebih besar */
+            height: 200px; /* Menjaga proporsi dengan tinggi yang sama */
+            object-fit: contain; /* Menjaga proporsi gambar */
+            margin-bottom: 20px; /* Jarak antara logo dan konten lainnya */
+        }
+
+        .btn {
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .card-group .card {
+            cursor: pointer;
+        }
+
+        /* Responsif untuk mobile */
+        @media (max-width: 768px) {
+            .card-group {
+                display: block;
+            }
+
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center mb-5">Converter e-Statement Bank untuk aplikasi Manager.io</h2>
+
+        <!-- Card Group untuk Pilihan Bank -->
+        <div class="card-group">
+            <!-- Card Bank Mandiri -->
+            <div class="card" onclick="window.location.href='/mandiri.html'">
+                <div class="card-body">
+                    <img src="images/mandiri-logo.png" class="card-img-top" alt="Bank Mandiri Logo">
+                    <button class="btn">Pilih Bank Mandiri</button>
+                </div>
+            </div>
+
+            <!-- Card Bank BCA -->
+            <div class="card" onclick="window.location.href='/bca.html'">
+                <div class="card-body">
+                    <img src="images/bca-logo.png" class="card-img-top" alt="Bank BCA Logo">
+                    <button class="btn">Pilih Bank BCA</button>
+                </div>
+            </div>
+
+            <!-- Card Bank BRI -->
+            <div class="card" onclick="window.location.href='/bri.html'">
+                <div class="card-body">
+                    <img src="images/bri-logo.png" class="card-img-top" alt="Bank BRI Logo">
+                    <button class="btn">Pilih Bank BRI</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -278,6 +278,49 @@
             }
         });
 
+        document.getElementById('filterButton').addEventListener('click', async () => {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            // Validasi tanggal
+            if (!startDate || !endDate) {
+                showAlert('Harap isi kedua tanggal dengan benar!', 'danger');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showAlert('Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!', 'danger');
+                return;
+            }
+
+            showLoader(true);
+            showAlert('Filtering data...', 'info');
+            
+            const response = await fetch('mandiri/filter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    startDate: startDate,
+                    endDate: endDate,
+                    data: window.uploadedData,
+                    csvFilename: window.csvFilename,
+                }               
+            ),
+            });
+
+            const result = await response.json();
+            showLoader(false);
+
+            if (response.ok) {
+                showAlert('File CSV untuk Manager.io sudah dibuat. Tunggu sebentar, lalu unduh.', 'success');
+                setTimeout(() => {
+                    window.location.href = `mandiri/download/${result.filename}`;
+                }, 1500);
+            } else {
+                showAlert('Error filtering file: ' + result.error, 'danger');
+            }
+        });
+
         function showDataPreview(data) {
             const previewContainer = document.getElementById('dataPreview');
             const previewTableBody = document.getElementById('previewTableBody');

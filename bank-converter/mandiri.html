@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -16,6 +16,18 @@
 
         h2 {
             margin-bottom: 30px;
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Space between logos */
+            margin-bottom: 20px;
+        }
+
+        .logos img {
+            max-height: 50px;
         }
 
         .row.align-items-center {
@@ -70,6 +82,62 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        #dataPreview {
+            margin-top: 20px;
+            font-size: 0.9rem; /* Ukuran font lebih kecil */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem; /* Ukuran font lebih kecil */
+        }
+
+        th, td {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #alertMessage {
+            margin-top: 20px; /* Memberikan jarak antara preview dan alert */
+        }
+
+          .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Space between logos */
+            margin-bottom: 20px;
+        }
+
+        .logo-box {
+            width: 100px; /* Width of each logo box */
+            height: 100px; /* Height of each logo box */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .logos img {
+            max-height: 80px; /* Resize logo to fit within the box */
+            max-width: 80px; /* Resize logo to fit within the box */
+        }
+
     </style>
 </head>
 
@@ -77,6 +145,17 @@
 
     <div class="container">
         <h2>Bank Mandiri e-Statement to Manager.io Converter</h2>
+
+        <!-- Logos: Bank Mandiri, Arrow, Manager.io -->
+        <div class="logos">
+            <div class="logo-box">
+                <img src="images/mandiri-logo.png" alt="Bank Mandiri Logo"> <!-- Ganti dengan URL atau path logo Bank Mandiri -->
+            </div>
+            <i class="bi bi-arrow-right-circle" style="font-size: 30px;"></i>
+            <div class="logo-box">
+                <img src="images/logo-managerio.png" alt="Manager.io Logo"> <!-- Ganti dengan URL atau path logo Manager.io -->
+            </div>
+        </div>
 
         <!-- Upload Form -->
         <form id="uploadForm" enctype="multipart/form-data" class="mb-4">
@@ -87,16 +166,37 @@
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
 
+        <!-- Loader -->
+        <div id="loader" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div id="dataPreview" style="display:none;">
+            <h4>Preview Data (3 Teratas dan 3 Terbawah)</h4>
+            <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewTableBody">
+                        <!-- Data preview akan diisi di sini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Alert for Error or Success -->
         <div id="alertMessage" class="mt-4" style="display: none;">
             <div class="alert" role="alert">
                 <span id="alertText"></span>
             </div>
-        </div>
-
-        <!-- Loader -->
-        <div id="loader" class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
         </div>
 
         <!-- Date Filter Form with Icon and Outline (hidden initially) -->
@@ -144,7 +244,7 @@
 
             // Show loader during file upload
             showLoader(true);
-            showAlert('Uploading file...', 'info');
+            showAlert('Mengunggah file...', 'info');
 
             const response = await fetch('mandiri/upload', {
                 method: 'POST',
@@ -170,53 +270,81 @@
 
                 document.getElementById('dateFilterForm').style.display = 'block';
                 showAlert('File berhasil diupload! Sekarang pilih range tanggal untuk filter data.', 'success');
+
+                // Display data preview
+                showDataPreview(result.data);
             } else {
                 showAlert('Error uploading file: ' + result.error, 'danger');
             }
         });
 
-        document.getElementById('filterButton').addEventListener('click', async () => {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+        function showDataPreview(data) {
+            const previewContainer = document.getElementById('dataPreview');
+            const previewTableBody = document.getElementById('previewTableBody');
+            previewTableBody.innerHTML = ''; // Reset isi tabel sebelumnya
 
-            // Validasi tanggal
-            if (!startDate || !endDate) {
-                showAlert('Harap isi kedua tanggal dengan benar!', 'danger');
-                return;
-            }
+            if (data.length > 6) {
+                const topData = data.slice(0, 3);
+                const bottomData = data.slice(-3);
 
-            if (new Date(startDate) > new Date(endDate)) {
-                showAlert('Tanggal akhir tidak boleh lebih kecil dari tanggal mulai!', 'danger');
-                return;
-            }
+                // Menambahkan baris data teratas
+                topData.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item[0]}</td>
+                        <td>${item[1]}</td>
+                        <td>${item[2]}</td>
+                        <td>${item[3]}</td>
+                        <td>${item[4]}</td>
+                    `;
+                    previewTableBody.appendChild(row);
+                });
 
-            showLoader(true);
-            showAlert('Filtering data...', 'info');
-            
-            const response = await fetch('mandiri/filter', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    startDate: startDate,
-                    endDate: endDate,
-                    data: window.uploadedData,
-                    csvFilename: window.csvFilename,
-                }               
-            ),
-            });
+                // Menambahkan baris penanda bahwa data terpotong
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="6" class="text-center">...data terpotong...</td>
+                `;
+                previewTableBody.appendChild(row);
 
-            const result = await response.json();
-            showLoader(false);
-
-            if (response.ok) {
-                showAlert('File CSV untuk Manager.io sudah dibuat. Tunggu sebentar, lalu unduh.', 'success');
-                setTimeout(() => {
-                    window.location.href = `mandiri/download/${result.filename}`;
-                }, 1500);
+                // Menambahkan baris data terbawah
+                bottomData.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${topData.length + index + 1}</td>
+                        <td>${item[0]}</td>
+                        <td>${item[1]}</td>
+                        <td>${item[2]}</td>
+                        <td>${item[3]}</td>
+                        <td>${item[4]}</td>
+                    `;
+                    previewTableBody.appendChild(row);
+                });
             } else {
-                showAlert('Error filtering file: ' + result.error, 'danger');
+                // Jika data tidak terpotong, tampilkan semua
+                data.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item[0]}</td>
+                        <td>${item[1]}</td>
+                        <td>${item[2]}</td>
+                        <td>${item[3]}</td>
+                        <td>${item[4]}</td>
+                    `;
+                    previewTableBody.appendChild(row);
+                });
             }
-        });
+
+            previewContainer.style.display = 'block';
+
+            // Menggeser halaman ke bawah ke bagian preview
+            window.scrollTo({
+                top: previewContainer.offsetTop, 
+                behavior: 'smooth'
+            });
+        }
 
         function showAlert(message, type) {
             const alertDiv = document.getElementById('alertMessage');

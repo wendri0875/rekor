@@ -1,9 +1,10 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const mandiri = require('./backend/mandiri');
-const bca = require('./backend/bca');
-const bri = require('./backend/bri');
+const mandiri = require('./backend/mandiri_be');
+const bca = require('./backend/bca_be');
+const bri = require('./backend/bri_be');
+const kas = require('./backend/kas_be');
 
 // Setup aplikasi Express
 const app = express();
@@ -24,6 +25,8 @@ app.get('/', (req, res) => {
 app.use('/mandiri', mandiri);
 app.use('/bca', bca);
 app.use('/bri', bri);
+app.use('/kas', kas);
+
 
 // Route untuk halaman masing-masing bank
 app.get('/mandiri.html', (req, res) => {
@@ -34,6 +37,9 @@ app.get('/bca.html', (req, res) => {
 });
 app.get('/bri.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'bank-converter', 'bri.html'));
+});
+app.get('/kas.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'bank-converter', 'kas.html'));
 });
 
 // Menjalankan server pada port 3000

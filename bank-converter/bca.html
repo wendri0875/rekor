@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Filter Excel File</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include Bootstrap Icons for the arrow -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+     <!-- Include External CSS -->
+     <link rel="stylesheet" href="styles/style.css">
+    
+</head>
+
+<body>
+
+    <div class="container">
+
+        <nav aria-label="breadcrumb" class="mt-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        <img src="images/home-logo.png" alt="Home Logo"> Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    
+                    <img src="images/bca-logo.png" alt="BCA Logo"> BCA</li>
+            </ol>
+        </nav>
+
+        <h2>Bank BCA e-Statement to Manager.io Converter</h2>
+
+        <!-- Logos: Bank BCA, Arrow, Manager.io -->
+        <div class="logos">
+            <div class="logo-box">
+                <img src="images/bca-logo.png" alt="Bank BCA Logo"> <!-- Ganti dengan URL atau path logo Bank BCA -->
+            </div>
+            <i class="bi bi-arrow-right-circle" style="font-size: 30px;"></i>
+            <div class="logo-box">
+                <img src="images/logo-managerio.png" alt="Manager.io Logo"> <!-- Ganti dengan URL atau path logo Manager.io -->
+            </div>
+        </div>
+
+        <!-- Upload Form -->
+        <form id="uploadForm" enctype="multipart/form-data" class="mb-4">
+            <div class="mb-3">
+                <label for="fileInput" class="form-label">Upload mutasi Bank BCA (csv), dapatkan dari aplikasi klikbca, mutasi rekening lalu download mutasi</label>
+                <input type="file" class="form-control" name="file" id="fileInput" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        <!-- Loader -->
+        <div id="loader" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div id="dataPreview" style="display:none;">
+            <h4>Preview Data (3 Teratas dan 3 Terbawah)</h4>
+            <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewTableBody">
+                        <!-- Data preview akan diisi di sini -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Alert for Error or Success -->
+        <div id="alertMessage" class="mt-4" style="display: none;">
+            <div class="alert" role="alert">
+                <span id="alertText"></span>
+            </div>
+        </div>
+
+        <!-- Date Filter Form with Icon and Outline (hidden initially) -->
+        <div id="arrowIcon">
+            <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <div id="dateFilterForm" class="border p-4 rounded" style="display: none;">
+            <h4 class="text-center mb-4">Filter Data by Date Range</h4>
+            
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required>
+                    </div>
+                </div>
+            </div>
+
+            <button id="filterButton" class="btn btn-success w-100">Filter Data</button>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+       <!-- Include External JS -->
+       <script src="scripts/bca.js"></script>
+
+</body>
+
+</html>
